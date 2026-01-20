@@ -51,7 +51,7 @@ main {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    transition: transform 0.5s ease-out;
+    transition: transform 0.5s ease-out 0s, color 0s linear 0.15s;
     user-select: none;
     transform: rotateY(-180deg);
 
@@ -67,7 +67,7 @@ main {
 }
 .card.flipped {
     transform: rotateY(0deg);
-    transition: transform 0.3s ease-out, color 0.15s linear;
+    transition: transform 0.5s ease-out 0s, color 0s linear 0.15s;
 
     color: var(--bg);
 }

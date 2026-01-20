@@ -73,7 +73,7 @@ function handle_click(index) {
             if (matched_count === cards_array.length) {
                 win.classList.add("active")
             }
-        }, 301)
+        }, 1000)
     }
 }
 
