@@ -27,10 +27,14 @@ body {
     width: 100vw;
     overflow: hidden;
     background-color: var(--bg);
+    position: relative;
 }
 button {
     margin-top: 1.3rem;
     padding: 6px 15px;
+}
+.restart-btn {
+    z-index: 0;
 }
 main {
     aspect-ratio: 1/1;
@@ -68,8 +72,9 @@ main {
     color: var(--bg);
 }
 .win {
+    background-color: transparent;
     color: transparent;
-    position: fixed;
+    position: absolute;
     height: 100vh;
     width: 100vw;
     font-size: 2rem;
@@ -77,4 +82,5 @@ main {
 }
 .win.active {
     color: var(--text);
+    background-color: rgba(0, 0, 0, 0.4);
 }
