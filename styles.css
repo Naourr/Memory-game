@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+:root {
+    --bg: black;
+    --text: white;
+    --accent: powderblue;
+    --accent-darker: rgb(119, 162, 168);
+}
+.rows {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+.cols {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: var(--bg);
+}
+button {
+    margin-top: 1.3rem;
+    padding: 6px 15px;
+}
+main {
+    aspect-ratio: 1/1;
+    height: min(90vw - 2rem, 90vh - 2rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+.card {
+    background-color: var(--accent);
+    border-radius: 8px;
+    margin: 7%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: transform 0.5s ease-out;
+    user-select: none;
+    transform: rotateY(-180deg);
+
+    color: transparent;
+    font-size: 2.2rem;
+    font-weight: bolder;
+}
+.card:hover {
+    background-color: var(--accent-darker);
+}
+.card:active {
+    background-color: var(--text);
+}
+.card.flipped {
+    transform: rotateY(0deg);
+    transition: transform 0.3s ease-out, color 0.15s linear;
+
+    color: var(--bg);
+}
+.win {
+    color: transparent;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    font-size: 2rem;
+    pointer-events: none;
+}
+.win.active {
+    color: var(--text);
+}
