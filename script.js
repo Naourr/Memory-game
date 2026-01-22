@@ -5,6 +5,7 @@ const symbols = ["A","B","C","D","E","F"]
 let cards_array
 let cards
 let first_flipped_index
+let first_player = true
 let locked = false
 let won = false
 
@@ -16,8 +17,10 @@ function shuffle() {
 }
 
 function start_game() {
+    first_player = true
     won = false
     locked = false
+
     main.innerHTML = ""
 
     cards_array = [...symbols, ...symbols].map((s, i) => (
@@ -62,6 +65,8 @@ function handle_click(index) {
         if (cards_array[first_flipped_index].symbol == cards_array[index].symbol) {
             cards_array[first_flipped_index].matched = true
             cards_array[index].matched = true
+        } else {
+            first_player ? first_player = false : first_player = true
         }
 
         setTimeout(() => {
@@ -69,11 +74,11 @@ function handle_click(index) {
                 if (!card.matched) card.flipped = false
             })
             locked = false
-
+            
             won = cards_array.every(card => card.matched)
 
             render()
-        }, 1000)
+        }, 300)
     }
     render()
 }
@@ -83,5 +88,6 @@ function render() {
     cards_array.forEach((card, index) => {
         (card.flipped || card.matched) ? cards[index].classList.add("flipped") : cards[index].classList.remove("flipped")
     })
+    first_player ? main.classList.add("player1") : main.classList.remove("player1")
     won ? win.classList.add("active") : win.classList.remove("active")
 }
