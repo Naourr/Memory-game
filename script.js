@@ -1,24 +1,25 @@
 const main = document.querySelector("main")
 const win = document.querySelector(".win")
 const restart_btn = document.querySelector(".restart-btn")
-let cards
-let cards_array
 const symbols = ["A","B","C","D","E","F"]
+let cards_array
+let cards
 let first_flipped_index
+let locked = false
+let won = false
 
 function shuffle() {
     for (let i = 0; i < cards_array.length; i++) {
-        let rand_index = Math.floor(Math.random() * cards_array.length)
-        let temp = cards_array[i]
-        cards_array[i] = cards_array[rand_index]
-        cards_array[rand_index] = temp
+        let rand_index = Math.floor(Math.random() * cards_array.length);
+        [cards_array[i], cards_array[rand_index]] = [cards_array[rand_index], cards_array[i]]
     }
 }
 
 function start_game() {
-    win.classList.remove("active")
-    main.style.pointerEvents = "all"
+    won = false
+    locked = false
     main.innerHTML = ""
+
     cards_array = [...symbols, ...symbols].map((s, i) => (
         {
             id: i,
@@ -28,14 +29,17 @@ function start_game() {
         }
     ))
     shuffle()
+
     cards_array.forEach((card, index) => {
         let div = document.createElement("div")
         div.classList.add("card")
         div.textContent = card.symbol
         div.onclick = () => handle_click(index)
         main.appendChild(div)
-    });
+    })
+    
     cards = document.querySelectorAll(".card")
+    render()
 }
 start_game()
 
@@ -44,36 +48,40 @@ restart_btn.addEventListener("click", () => {
 })
 
 function handle_click(index) {
-    if (!cards_array[index].flipped) {
-        cards_array[index].flipped = true
-        cards[index].classList.add("flipped")
-    }
+    if (cards_array[index].flipped || cards_array[index].matched || locked || won) return
 
-    let flipped_unmatched_cards = cards_array.filter(card => card.flipped && !card.matched)
+    cards_array[index].flipped = true
+    const flipped_unmatched_cards = cards_array.filter(card => card.flipped && !card.matched)
 
     if (flipped_unmatched_cards.length == 1) {
         first_flipped_index = index
+
     } else if (flipped_unmatched_cards.length == 2) {
-        if (cards_array[first_flipped_index].symbol === cards_array[index].symbol) {
+        locked = true
+
+        if (cards_array[first_flipped_index].symbol == cards_array[index].symbol) {
             cards_array[first_flipped_index].matched = true
             cards_array[index].matched = true
         }
-        main.style.pointerEvents = "none"
 
         setTimeout(() => {
-            cards.forEach((card, i) => {
-                if (!cards_array[i].matched) {
-                    cards_array[i].flipped = false
-                    card.classList.remove("flipped")
-                }
+            cards_array.forEach(card => {
+                if (!card.matched) card.flipped = false
             })
-            main.style.pointerEvents = "all"
+            locked = false
 
-            const matched_count = cards_array.filter(card => card.matched).length
-            if (matched_count === cards_array.length) {
-                win.classList.add("active")
-            }
+            won = cards_array.every(card => card.matched)
+
+            render()
         }, 1000)
     }
+    render()
 }
 
+function render() {
+    locked ? (main.style.pointerEvents = "none") : (main.style.pointerEvents = "all")
+    cards_array.forEach((card, index) => {
+        (card.flipped || card.matched) ? cards[index].classList.add("flipped") : cards[index].classList.remove("flipped")
+    })
+    won ? win.classList.add("active") : win.classList.remove("active")
+}
